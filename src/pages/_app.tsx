@@ -5,7 +5,7 @@ import {
   Box, Drawer, CssBaseline,
   Toolbar, List, Typography, Divider,
   IconButton, ListItem, ListItemButton,
-  ListItemIcon, ListItemText
+  ListItemIcon, ListItemText, Collapse
 } from "@mui/material"
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 
@@ -24,6 +24,7 @@ import { faPizzaSlice, faFaceSmile, faFrog,
 
 import type { AppProps } from 'next/app'
 import { Button, Container } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -78,6 +79,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function App({ Component, pageProps }: AppProps) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [openBrincos, setOpenBrincos] = React.useState(false)
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -124,7 +126,7 @@ export default function App({ Component, pageProps }: AppProps) {
               variant="h5"
               noWrap
               component="a"
-              href=""
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -144,13 +146,16 @@ export default function App({ Component, pageProps }: AppProps) {
                   key={Number(item)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {item}
                 </Button>
               ))}
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
+            <IconButton
+            edge="start"
+            >
               <FontAwesomeIcon icon={faCartShopping} style={{color: "#f79cd9"}} />
+            </IconButton>
             </Box>
           </Toolbar>
     </Container>
@@ -177,18 +182,37 @@ export default function App({ Component, pageProps }: AppProps) {
     </DrawerHeader>
     <Divider />
     <List>
-      {[["Comidinhas", faPizzaSlice], ["Personagens", faFaceSmile]].map((item, index) => (
-        <ListItem key={index} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-            <FontAwesomeIcon size='2x' icon={item[1] as IconProp} style={{color: "#ffea08"}} />
-            </ListItemIcon>
-            <ListItemText>
-              <h3 style={{color: "#f79cd9"}}>{item[0] as String}</h3>
-            </ListItemText>
-          </ListItemButton>
-        </ListItem>
-      ))}
+    <ListItem onClick={() => setOpenBrincos(!openBrincos)} disablePadding>
+      <ListItemButton>
+        <ListItemText>
+            <h3 style={{color: "#f79cd9"}}>Brincos</h3>
+        </ListItemText>
+      {openBrincos ? 
+        <ExpandLess style={{color: "#f79cd9"}} /> : 
+        <ExpandMore style={{color: "#f79cd9"}} />}
+      </ListItemButton>
+    </ListItem>
+      <Collapse in={openBrincos} timeout="auto" unmountOnExit>
+        <List>
+          {[
+            ["Comidinhas", faPizzaSlice], ["Personagens", faFaceSmile],
+            ["Animais", faFrog], ["Elementais", faHatWizard],
+            ["Argolas", faCircle], ["Coloridos", faRainbow],
+            ["Brincos Pequenos", faEarDeaf], ["Outros", faPallet],
+          ].map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                <FontAwesomeIcon size='2x' icon={item[1] as IconProp} style={{color: "#ffea08"}} />
+                </ListItemIcon>
+                <ListItemText>
+                  <h3 style={{color: "#f79cd9"}}>{item[0] as String}</h3>
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Collapse>
     </List>
   </Drawer>
   <Main style={{background: "#fdffc2",}} open={open}>
